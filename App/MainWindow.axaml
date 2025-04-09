@@ -4,6 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="App.MainWindow"
-        Title="App">
-    Welcome to Avalonia!
+        MinHeight="300" MinWidth="500"
+        MaxHeight="750" MaxWidth="1250"
+        Height="450" Width="800"
+        WindowStartupLocation="CenterOwner"
+        Title="Листинг">
+    <ContentControl x:Name="Content"/>
 </Window>
