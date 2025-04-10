@@ -66,6 +66,7 @@ public partial class MainPage : UserControl
         });
 
         _fields.IncludePattern = string.Empty;
+        _fields.UpdateIncludePatternsIndexes();
     }
 
     private void IncludePatternTextBox_OnKeyDown(object? sender, KeyEventArgs e)
@@ -81,6 +82,7 @@ public partial class MainPage : UserControl
         if (button.Tag is not int index) return;
 
         _fields.IncludePatterns.Remove(_fields.IncludePatterns.First(p => p.Index == index));
+        _fields.UpdateIncludePatternsIndexes();
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
@@ -96,6 +98,7 @@ public partial class MainPage : UserControl
         });
 
         _fields.ExcludePattern = string.Empty;
+        _fields.UpdateExcludePatternsIndexes();
     }
 
     private void ExcludePatternTextBox_OnKeyDown(object? sender, KeyEventArgs e)
@@ -111,6 +114,7 @@ public partial class MainPage : UserControl
         if (button.Tag is not int index) return;
 
         _fields.ExcludePatterns.Remove(_fields.ExcludePatterns.First(p => p.Index == index));
+        _fields.UpdateExcludePatternsIndexes();
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
