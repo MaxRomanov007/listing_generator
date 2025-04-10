@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -57,6 +58,9 @@ public class MainPageFields : INotifyPropertyChanged, INotifyDataErrorInfo
         }
     }
 
+    public ObservableCollection<Pattern> IncludePatterns { get; set; } = [];
+    public ObservableCollection<Pattern> ExcludePatterns { get; set; } = [];
+
     public void ValidateRootPath()
     {
         ClearErrors(nameof(RootPath));
@@ -81,6 +85,8 @@ public class MainPageFields : INotifyPropertyChanged, INotifyDataErrorInfo
 
     public void ValidateIncludePattern()
     {
+        ClearErrors(nameof(IncludePattern));
+        
         if (string.IsNullOrWhiteSpace(_includePattern))
         {
             AddError(nameof(IncludePattern), "Патерн не может быть пустым");
@@ -89,6 +95,8 @@ public class MainPageFields : INotifyPropertyChanged, INotifyDataErrorInfo
 
     public void ValidateExcludePattern()
     {
+        ClearErrors(nameof(ExcludePattern));
+        
         if (string.IsNullOrWhiteSpace(_excludePattern))
         {
             AddError(nameof(ExcludePattern), "Патерн не может быть пустым");

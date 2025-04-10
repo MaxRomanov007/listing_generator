@@ -5,6 +5,8 @@
              xmlns:models="clr-namespace:App.Domain.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="models:MainPageFields"
+             Unloaded="PageControl_OnUnloaded"
+             Loaded="PageControl_OnLoaded"
              x:Class="App.Pages.MainPage">
     <UserControl.Styles>
         <Style Selector="Label">
@@ -19,18 +21,26 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
-        
+
         <Style Selector="Border.PatternItem">
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Padding" Value="10 3"/>
-            <Setter Property="Margin" Value="3"/>
-            <Setter Property="BorderThickness" Value="2"/>
-        </Style>
-        
-        <Style Selector="Border.PatternItem TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="10 3" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="BorderThickness" Value="2" />
+
+            <Style Selector="^ TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            
+            <Style Selector="^ Button">
+                <Setter Property="Padding" Value="3"/>
+            </Style>
+            
+            <Style Selector="^ PathIcon">
+                <Setter Property="Width" Value="15"/>
+                <Setter Property="Height" Value="15"/>
+            </Style>
         </Style>
     </UserControl.Styles>
 
@@ -50,7 +60,8 @@
         <Button
             Grid.Row="1"
             Grid.Column="3"
-            Content="Выбрать" />
+            Content="Выбрать"
+            Click="SelectFolderButton_OnClick" />
 
         <Label
             Grid.Row="2"
@@ -64,8 +75,8 @@
         <Button
             Grid.Row="2"
             Grid.Column="3"
-            Content="Добавить" 
-            Click="IncludePatternAddButton_OnClick"/>
+            Content="Добавить"
+            Click="IncludePatternAddButton_OnClick" />
 
         <ScrollViewer
             Grid.Row="3"
@@ -73,14 +84,18 @@
             Grid.ColumnSpan="3"
             MaxHeight="110">
 
-            <ItemsControl x:Name="IncludePatternsItemsControl">
+            <ItemsControl
+                x:Name="IncludePatternsItemsControl"
+                ItemsSource="{Binding IncludePatterns}">
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="models:Pattern">
                         <Border Classes="PatternItem">
                             <DockPanel>
                                 <Button
                                     DockPanel.Dock="Right"
-                                    Tag="{Binding Index}">
+                                    Tag="{Binding Index}"
+                                    Click="DeleteIncludePatternButton_OnClick">
 
                                     <PathIcon Data="{StaticResource DeleteIcon}" />
                                 </Button>
@@ -104,7 +119,8 @@
         <Button
             Grid.Row="4"
             Grid.Column="3"
-            Content="Добавить" />
+            Content="Добавить"
+            Click="ExcludePatternAddButton_OnClick" />
 
         <ScrollViewer
             Grid.Row="5"
@@ -112,14 +128,18 @@
             Grid.ColumnSpan="3"
             MaxHeight="110">
 
-            <ItemsControl x:Name="ExcludePatternsItemsControl">
+            <ItemsControl
+                x:Name="ExcludePatternsItemsControl"
+                ItemsSource="{Binding ExcludePatterns}">
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="models:Pattern">
                         <Border Classes="PatternItem">
                             <DockPanel>
                                 <Button
                                     DockPanel.Dock="Right"
-                                    Tag="{Binding Index}">
+                                    Tag="{Binding Index}"
+                                    Click="DeleteExcludePatternButton_OnClick">
 
                                     <PathIcon Data="{StaticResource DeleteIcon}" />
                                 </Button>
@@ -139,17 +159,20 @@
 
             <Button
                 Grid.Column="0"
-                Content="Загрузить настройки" />
+                Content="Загрузить настройки"
+                Click="LoadSettingsButton_OnClick" />
             <Button
                 Grid.Column="1"
-                Content="Выгрузить настройки" />
+                Content="Выгрузить настройки"
+                Click="SaveSettingsButton_OnClick" />
         </Grid>
 
         <Button
             Grid.Row="7"
             Grid.Column="1"
             Grid.ColumnSpan="3"
-            Content="Создать листинг" />
+            Content="Создать листинг"
+            Click="CreateListingButton_OnClick" />
 
     </Grid>
 </UserControl>

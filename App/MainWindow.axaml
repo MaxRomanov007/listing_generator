@@ -8,6 +8,8 @@
         MaxHeight="750" MaxWidth="1250"
         Height="480" Width="800"
         WindowStartupLocation="CenterOwner"
-        Title="Листинг">
-    <ContentControl x:Name="Content"/>
+        Title="Листинг"
+        Icon="Assets/Logo.ico">
+
+    <ContentControl x:Name="Content" />
 </Window>
