@@ -45,41 +45,60 @@
     </UserControl.Styles>
 
     <Grid
-        RowDefinitions="*, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *"
+        RowDefinitions="*, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *"
         ColumnDefinitions="*, Auto, Auto, Auto, *">
-
+        
         <Label
             Grid.Row="1"
             Grid.Column="1"
+            Content="Конфигурация" />
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="2"
+            x:Name="ConfigurationsComboBox"
+            ItemsSource="{Binding ConfigurationsNames}"
+            SelectedItem="{Binding SelectedConfiguration}"
+            SelectionChanged="ConfigurationsComboBox_OnSelectionChanged"
+            Width="250"/>
+        <Button
+            Grid.Row="1"
+            Grid.Column="3"
+            Content="Удалить"
+            Click="DeleteConfigurationButton_OnClick"/>
+
+        <Label
+            Grid.Row="2"
+            Grid.Column="1"
             Content="Путь" />
         <TextBox
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="2"
             Watermark="Путь до папки"
             Text="{Binding RootPath}" />
         <Button
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="3"
             Content="Выбрать"
             Click="SelectFolderButton_OnClick" />
 
         <Label
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1"
             Content="Включить" />
         <TextBox
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="2"
             Watermark="Паттерн"
+            KeyDown="IncludePatternTextBox_OnKeyDown"
             Text="{Binding IncludePattern}" />
         <Button
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="3"
             Content="Добавить"
             Click="IncludePatternAddButton_OnClick" />
 
         <ScrollViewer
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="3"
             MaxHeight="110">
@@ -108,22 +127,23 @@
         </ScrollViewer>
 
         <Label
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="1"
             Content="Исключить" />
         <TextBox
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="2"
             Watermark="Паттерн"
+            KeyDown="ExcludePatternTextBox_OnKeyDown"
             Text="{Binding ExcludePattern}" />
         <Button
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="3"
             Content="Добавить"
             Click="ExcludePatternAddButton_OnClick" />
 
         <ScrollViewer
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="1"
             Grid.ColumnSpan="3"
             MaxHeight="110">
@@ -151,24 +171,15 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Grid
-            Grid.Row="6"
-            Grid.Column="1"
-            Grid.ColumnSpan="3"
-            ColumnDefinitions="*, *">
-
-            <Button
-                Grid.Column="0"
-                Content="Загрузить настройки"
-                Click="LoadSettingsButton_OnClick" />
-            <Button
-                Grid.Column="1"
-                Content="Выгрузить настройки"
-                Click="SaveSettingsButton_OnClick" />
-        </Grid>
-
         <Button
             Grid.Row="7"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Content="Сохранить конфигурацию"
+            Click="SaveConfigurationButton_OnClick"/>
+
+        <Button
+            Grid.Row="8"
             Grid.Column="1"
             Grid.ColumnSpan="3"
             Content="Создать листинг"

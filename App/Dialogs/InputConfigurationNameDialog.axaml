@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:App.Domain.Models"
+        x:Class="App.Dialogs.InputConfigurationNameDialog"
+        Title="Ввод имени конфигурации"
+        Width="300"
+        Height="150"
+        x:DataType="models:InputDialogContent"
+        Icon="../Assets/Logo.ico"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="10" Spacing="10">
+        <TextBlock Text="Введите имя конфигурации:"/>
+        <TextBox x:Name="InputTextBox" Watermark="Имя конфигурации" Text="{Binding Text}" KeyDown="InputTextBox_OnKeyDown"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Content="Отмена" Click="CancelButton_OnClick"/>
+            <Button Content="OK" Click="OkButton_OnClick"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

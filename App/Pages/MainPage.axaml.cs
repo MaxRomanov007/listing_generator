@@ -1,15 +1,17 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using App.Dialogs;
 using App.Domain.Models;
 using App.Domain.Utils;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Dto;
+using Avalonia.VisualTree;
 using MsBox.Avalonia.Enums;
 
 namespace App.Pages;
@@ -47,17 +49,7 @@ public partial class MainPage : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard(
-                new MessageBoxStandardParams
-                {
-                    ButtonDefinitions = ButtonEnum.Ok,
-                    ContentTitle = "Ошибка",
-                    ContentMessage = $"Не удалось выбрать папку: {ex.Message}",
-                    Icon = Icon.Error,
-                    WindowIcon = new WindowIcon("Assets/Logo.ico"),
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                }
-            ).ShowAsync();
+            await Domain.Utils.Dialogs.ShowErrorAsync($"Не удалось выбрать папку: {ex.Message}");
         }
     }
 
@@ -65,10 +57,7 @@ public partial class MainPage : UserControl
     private void IncludePatternAddButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _fields.ValidateIncludePattern();
-        if (_fields.HasErrors)
-        {
-            return;
-        }
+        if (_fields.HasErrors) return;
 
         _fields.IncludePatterns.Add(new Pattern
         {
@@ -79,18 +68,17 @@ public partial class MainPage : UserControl
         _fields.IncludePattern = string.Empty;
     }
 
+    private void IncludePatternTextBox_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+        IncludePatternAddButton_OnClick(sender, e);
+    }
+
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     private void DeleteIncludePatternButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Button button)
-        {
-            return;
-        }
-
-        if (button.Tag is not int index)
-        {
-            return;
-        }
+        if (sender is not Button button) return;
+        if (button.Tag is not int index) return;
 
         _fields.IncludePatterns.Remove(_fields.IncludePatterns.First(p => p.Index == index));
     }
@@ -99,11 +87,7 @@ public partial class MainPage : UserControl
     private void ExcludePatternAddButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _fields.ValidateExcludePattern();
-
-        if (_fields.HasErrors)
-        {
-            return;
-        }
+        if (_fields.HasErrors) return;
 
         _fields.ExcludePatterns.Add(new Pattern
         {
@@ -114,125 +98,27 @@ public partial class MainPage : UserControl
         _fields.ExcludePattern = string.Empty;
     }
 
+    private void ExcludePatternTextBox_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+        ExcludePatternAddButton_OnClick(sender, e);
+    }
+
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     private void DeleteExcludePatternButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Button button)
-        {
-            return;
-        }
-
-        if (button.Tag is not int index)
-        {
-            return;
-        }
+        if (sender is not Button button) return;
+        if (button.Tag is not int index) return;
 
         _fields.ExcludePatterns.Remove(_fields.ExcludePatterns.First(p => p.Index == index));
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    private async void SaveSettingsButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel is null) return;
-
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-            {
-                Title = "Сохранить настройки",
-                SuggestedFileName = "settings.json",
-                FileTypeChoices = new[]
-                {
-                    new FilePickerFileType("JSON файл")
-                    {
-                        Patterns = new[] { "*.json" }
-                    }
-                }
-            });
-
-            if (file is null) return;
-
-            await using var stream = await file.OpenWriteAsync();
-            await using var writer = new StreamWriter(stream);
-
-            var settings = new
-            {
-                _fields.IncludePatterns,
-                _fields.ExcludePatterns
-            };
-
-            var json = JsonSerializer.Serialize(settings);
-            await writer.WriteAsync(json);
-        }
-        catch (Exception ex)
-        {
-            await MessageBoxManager.GetMessageBoxStandard(
-                new MessageBoxStandardParams
-                {
-                    ButtonDefinitions = ButtonEnum.Ok,
-                    ContentTitle = "Ошибка",
-                    ContentMessage = $"Не удалось сохранить настройки: {ex.Message}",
-                    Icon = Icon.Error,
-                    WindowIcon = new WindowIcon("Assets/Logo.ico"),
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                }
-            ).ShowAsync();
-        }
-    }
-
-    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    private async void LoadSettingsButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel is null) return;
-
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-            {
-                Title = "Загрузить настройки",
-                AllowMultiple = false,
-                FileTypeFilter = new[]
-                {
-                    new FilePickerFileType("JSON файл")
-                    {
-                        Patterns = new[] { "*.json" }
-                    }
-                }
-            });
-
-            if (files.Count == 0) return;
-
-            await using var stream = await files[0].OpenReadAsync();
-            using var reader = new StreamReader(stream);
-            var json = await reader.ReadToEndAsync();
-
-            var settings = JsonSerializer.Deserialize<MainPageFields>(json);
-            if (settings == null) return;
-
-            _fields = settings;
-            DataContext = _fields;
-        }
-        catch (Exception ex)
-        {
-            await MessageBoxManager.GetMessageBoxStandard(
-                new MessageBoxStandardParams
-                {
-                    ButtonDefinitions = ButtonEnum.Ok,
-                    ContentTitle = "Ошибка",
-                    ContentMessage = $"Не удалось загрузить настройки: {ex.Message}",
-                    Icon = Icon.Error,
-                    WindowIcon = new WindowIcon("Assets/Logo.ico"),
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                }
-            ).ShowAsync();
-        }
-    }
-
-    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     private async void CreateListingButton_OnClick(object? sender, RoutedEventArgs e)
     {
+        _fields.ValidateRootPath();
+        if (_fields.HasErrors) return;
+        
         var topLevel = TopLevel.GetTopLevel(this);
         if (topLevel is null) return;
 
@@ -250,7 +136,7 @@ public partial class MainPage : UserControl
         });
 
         if (file is null) return;
-        
+
         _fields.ValidateRootPath();
         if (_fields.HasErrors)
         {
@@ -265,32 +151,23 @@ public partial class MainPage : UserControl
 
         try
         {
-            await WordGenerator.GenerateReport(_fields.RootPath, files, file.Name);
+            await WordGenerator.GenerateReport(_fields.RootPath, files, file.Path.LocalPath);
+            await Domain.Utils.Dialogs.ShowSuccessAsync("Листинг успешно записан");
         }
         catch (IOException)
         {
-            await MessageBoxManager.GetMessageBoxStandard(
-                new MessageBoxStandardParams
-                {
-                    ButtonDefinitions = ButtonEnum.Ok,
-                    ContentTitle = "Ошибка",
-                    ContentMessage = "Закройте файл перед загрузкой",
-                    Icon = Icon.Error,
-                    WindowIcon = new WindowIcon("Assets/Logo.ico"),
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                }
-            ).ShowAsync();
+            await Domain.Utils.Dialogs.ShowErrorAsync("Закройте файл перед загрузкой");
         }
     }
-    
+
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     private async void PageControl_OnUnloaded(object? sender, RoutedEventArgs e)
     {
         var settings = new
         {
             _fields.RootPath,
-            _fields.IncludePatterns,
-            _fields.ExcludePatterns
+            _fields.Configurations,
+            _fields.SelectedConfiguration
         };
         try
         {
@@ -301,7 +178,7 @@ public partial class MainPage : UserControl
             Console.WriteLine($"failed to save settings on unload: {ex.Message}");
         }
     }
-    
+
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     private async void PageControl_OnLoaded(object? sender, RoutedEventArgs e)
     {
@@ -312,6 +189,8 @@ public partial class MainPage : UserControl
             var settings = JsonSerializer.Deserialize<MainPageFields>(json);
             if (settings == null) return;
 
+            settings.ConfigurationsNames = new ObservableCollection<string>(settings.Configurations.Keys);
+
             _fields = settings;
             DataContext = _fields;
         }
@@ -319,9 +198,86 @@ public partial class MainPage : UserControl
         {
             Console.WriteLine("settings file doest exists");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"failed to read settings on load: {ex.Message}");
         }
+    }
+
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    private async void SaveConfigurationButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var dialog = new InputConfigurationNameDialog();
+        var window = this.FindAncestorOfType<Window>();
+        if (window == null) return;
+
+        var result = await dialog.ShowDialog<string>(window);
+
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            return;
+        }
+
+        var configName = result.Trim();
+
+        if (_fields.Configurations.ContainsKey(configName))
+        {
+            var confirmResult = await Domain.Utils.Dialogs.ShowQuestionAsync(
+                "Конфигурация с таким именем уже существует. Перезаписать?"
+            );
+
+            if (confirmResult != ButtonResult.Yes)
+            {
+                _fields.SelectedConfiguration = configName;
+                return;
+            }
+        }
+
+        _fields.Configurations[configName] = new Patterns
+        {
+            Include = _fields.IncludePatterns.ToList(),
+            Exclude = _fields.ExcludePatterns.ToList()
+        };
+
+        if (!_fields.ConfigurationsNames.Contains(configName))
+        {
+            _fields.ConfigurationsNames.Add(configName);
+        }
+
+        _fields.SelectedConfiguration = configName;
+    }
+
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    private void ConfigurationsComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (sender is not ComboBox comboBox) return;
+        if (comboBox.SelectedItem is not string selectedConfiguration) return;
+
+        if (!_fields.Configurations.TryGetValue(selectedConfiguration, out var configuration)) return;
+
+        _fields.IncludePatterns.Clear();
+        foreach (var pattern in configuration.Include)
+        {
+            _fields.IncludePatterns.Add(pattern);
+        }
+
+        _fields.ExcludePatterns.Clear();
+        foreach (var pattern in configuration.Exclude)
+        {
+            _fields.ExcludePatterns.Add(pattern);
+        }
+    }
+
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    private void DeleteConfigurationButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ConfigurationsComboBox.SelectedItem is not string selectedConfiguration) return;
+        if (!_fields.Configurations.ContainsKey(selectedConfiguration)) return;
+
+        _fields.Configurations.Remove(selectedConfiguration);
+        _fields.IncludePatterns.Clear();
+        _fields.ExcludePatterns.Clear();
+
+        _fields.ConfigurationsNames.Remove(selectedConfiguration);
     }
 }

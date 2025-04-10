@@ -61,6 +61,23 @@ public class MainPageFields : INotifyPropertyChanged, INotifyDataErrorInfo
     public ObservableCollection<Pattern> IncludePatterns { get; set; } = [];
     public ObservableCollection<Pattern> ExcludePatterns { get; set; } = [];
 
+    public ObservableCollection<string> ConfigurationsNames { get; set; } = [];
+
+    private string _selectedConfiguration = string.Empty;
+
+    public string SelectedConfiguration
+    {
+        get => _selectedConfiguration;
+        set
+        {
+            if (_selectedConfiguration == value) return;
+            _selectedConfiguration = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public Dictionary<string, Patterns> Configurations { get; set; } = new();
+
     public void ValidateRootPath()
     {
         ClearErrors(nameof(RootPath));

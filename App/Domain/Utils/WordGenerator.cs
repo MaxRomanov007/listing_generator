@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
@@ -30,6 +27,7 @@ public static class WordGenerator
             pathPara.SpacingLine(18);
 
             var content = await File.ReadAllTextAsync(filePath);
+            content = RemoveInvalidXmlChars(content);
 
             var borderTable = doc.AddTable(1, 1); 
             var cellPara = borderTable.Rows[0].Cells[0].Paragraphs.First();
@@ -45,10 +43,18 @@ public static class WordGenerator
         }
 
         doc.Save();
-        
-        if (File.Exists(outputFilePath))
-        {
-            Process.Start(new ProcessStartInfo(outputFilePath) { UseShellExecute = true });
-        }
+    }
+    
+    private static string RemoveInvalidXmlChars(string text)
+    {
+        if (string.IsNullOrEmpty(text)) 
+            return text;
+
+        var validXmlChars = text.Where(ch => 
+            ch == 0x9 || ch == 0xA || ch == 0xD || 
+            (ch >= 0x20 && ch <= 0xD7FF) || 
+            (ch >= 0xE000 && ch <= 0xFFFD)).ToArray();
+
+        return new string(validXmlChars);
     }
 }

@@ -31,7 +31,7 @@
             </FluentTheme.Palettes>
         </FluentTheme>
 
-        <Style Selector="TextBox, Label, Button">
+        <Style Selector="TextBox, Label, Button, ComboBox">
             <Setter Property="Margin" Value="3" />
         </Style>
     </Application.Styles>
