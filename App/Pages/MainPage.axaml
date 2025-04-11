@@ -108,17 +108,16 @@
                 ItemsSource="{Binding IncludePatterns}">
 
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="models:Pattern">
+                    <DataTemplate x:DataType="x:String">
                         <Border Classes="PatternItem">
                             <DockPanel>
                                 <Button
                                     DockPanel.Dock="Right"
-                                    Tag="{Binding Index}"
                                     Click="DeleteIncludePatternButton_OnClick">
 
                                     <PathIcon Data="{StaticResource DeleteIcon}" />
                                 </Button>
-                                <TextBlock Text="{Binding Text}" />
+                                <TextBlock Text="{Binding}" />
                             </DockPanel>
                         </Border>
                     </DataTemplate>
@@ -153,17 +152,16 @@
                 ItemsSource="{Binding ExcludePatterns}">
 
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="models:Pattern">
+                    <DataTemplate x:DataType="x:String">
                         <Border Classes="PatternItem">
                             <DockPanel>
                                 <Button
                                     DockPanel.Dock="Right"
-                                    Tag="{Binding Index}"
                                     Click="DeleteExcludePatternButton_OnClick">
 
                                     <PathIcon Data="{StaticResource DeleteIcon}" />
                                 </Button>
-                                <TextBlock Text="{Binding Text}" />
+                                <TextBlock Text="{Binding }" />
                             </DockPanel>
                         </Border>
                     </DataTemplate>

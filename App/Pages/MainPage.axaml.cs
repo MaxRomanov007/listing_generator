@@ -59,14 +59,9 @@ public partial class MainPage : UserControl
         _fields.ValidateIncludePattern();
         if (_fields.HasErrors) return;
 
-        _fields.IncludePatterns.Add(new Pattern
-        {
-            Text = _fields.IncludePattern,
-            Index = _fields.IncludePatterns.Count
-        });
+        _fields.IncludePatterns.Add(_fields.IncludePattern);
 
         _fields.IncludePattern = string.Empty;
-        _fields.UpdateIncludePatternsIndexes();
     }
 
     private void IncludePatternTextBox_OnKeyDown(object? sender, KeyEventArgs e)
@@ -79,10 +74,9 @@ public partial class MainPage : UserControl
     private void DeleteIncludePatternButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button button) return;
-        if (button.Tag is not int index) return;
+        if (button.DataContext is not string pattern) return;
 
-        _fields.IncludePatterns.Remove(_fields.IncludePatterns.First(p => p.Index == index));
-        _fields.UpdateIncludePatternsIndexes();
+        _fields.IncludePatterns.Remove(pattern);
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
@@ -91,14 +85,9 @@ public partial class MainPage : UserControl
         _fields.ValidateExcludePattern();
         if (_fields.HasErrors) return;
 
-        _fields.ExcludePatterns.Add(new Pattern
-        {
-            Text = _fields.ExcludePattern,
-            Index = _fields.ExcludePatterns.Count
-        });
+        _fields.ExcludePatterns.Add(_fields.ExcludePattern);
 
         _fields.ExcludePattern = string.Empty;
-        _fields.UpdateExcludePatternsIndexes();
     }
 
     private void ExcludePatternTextBox_OnKeyDown(object? sender, KeyEventArgs e)
@@ -111,10 +100,9 @@ public partial class MainPage : UserControl
     private void DeleteExcludePatternButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button button) return;
-        if (button.Tag is not int index) return;
+        if (button.DataContext is not string pattern) return;
 
-        _fields.ExcludePatterns.Remove(_fields.ExcludePatterns.First(p => p.Index == index));
-        _fields.UpdateExcludePatternsIndexes();
+        _fields.ExcludePatterns.Remove(pattern);
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
@@ -149,8 +137,8 @@ public partial class MainPage : UserControl
 
         var files = FileScanner.ScanFiles(
             _fields.RootPath,
-            _fields.IncludePatterns.Select(p => p.Text).ToList(),
-            _fields.ExcludePatterns.Select(p => p.Text).ToList()
+            _fields.IncludePatterns.ToList(),
+            _fields.ExcludePatterns.ToList()
         );
 
         try

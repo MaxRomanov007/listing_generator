@@ -58,23 +58,9 @@ public class MainPageFields : INotifyPropertyChanged, INotifyDataErrorInfo
         }
     }
 
-    public ObservableCollection<Pattern> IncludePatterns { get; set; } = [];
-    public void UpdateIncludePatternsIndexes()
-    {
-        for (var i = 0; i < IncludePatterns.Count; i++)
-        {
-            IncludePatterns[i].Index = i;
-        }
-    }
+    public ObservableCollection<string> IncludePatterns { get; set; } = [];
     
-    public ObservableCollection<Pattern> ExcludePatterns { get; set; } = [];
-    public void UpdateExcludePatternsIndexes()
-    {
-        for (var i = 0; i < ExcludePatterns.Count; i++)
-        {
-            ExcludePatterns[i].Index = i;
-        }
-    }
+    public ObservableCollection<string> ExcludePatterns { get; set; } = [];
 
     public ObservableCollection<string> ConfigurationsNames { get; set; } = [];
 
