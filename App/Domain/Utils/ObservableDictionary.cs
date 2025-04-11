@@ -191,6 +191,11 @@ public sealed class ObservableDictionary<TKey, TValue> : ObservableCollection<Ob
         return Equals(r.Value, item.Value);
     }
 
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+        throw new NotImplementedException();
+    }
+
     public bool IsReadOnly => false;
 
     public bool Remove(KeyValuePair<TKey, TValue> item)
