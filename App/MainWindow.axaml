@@ -8,6 +8,7 @@
         MaxHeight="750" MaxWidth="1250"
         Height="480" Width="800"
         WindowStartupLocation="CenterOwner"
+        Unloaded="Window_OnUnloaded"
         Title="Листинг"
         Icon="Assets/Logo.ico">
 

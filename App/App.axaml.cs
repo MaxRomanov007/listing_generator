@@ -1,3 +1,4 @@
+using App.Domain.Models;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;

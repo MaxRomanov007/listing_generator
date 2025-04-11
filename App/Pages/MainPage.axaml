@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:App.Domain.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Unloaded="Page_OnUnloaded"
              x:DataType="models:MainPageFields"
-             Unloaded="PageControl_OnUnloaded"
-             Loaded="PageControl_OnLoaded"
              x:Class="App.Pages.MainPage">
     <UserControl.Styles>
         <Style Selector="Label">
@@ -56,7 +55,6 @@
             Grid.Row="1"
             Grid.Column="2"
             x:Name="ConfigurationsComboBox"
-            ItemsSource="{Binding ConfigurationsNames}"
             SelectedItem="{Binding SelectedConfiguration}"
             SelectionChanged="ConfigurationsComboBox_OnSelectionChanged"
             Width="250"/>
