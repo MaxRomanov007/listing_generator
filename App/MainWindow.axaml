@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="App.MainWindow"
-        MinHeight="480" MinWidth="500"
+        MinHeight="480" MinWidth="550"
         MaxHeight="750" MaxWidth="1250"
         Height="480" Width="800"
         WindowStartupLocation="CenterOwner"

@@ -1,5 +1,4 @@
 using App.Domain.Models;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;

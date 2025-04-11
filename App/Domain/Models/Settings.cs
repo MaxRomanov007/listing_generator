@@ -19,6 +19,37 @@ namespace App.Domain.Models
         public string SelectedConfiguration { get; set; } = string.Empty;
     }
 
+    public class GeneratingConfig
+    {
+        public float MarginTop { get; set; } = 2;
+        public float MarginRight { get; set; } = 1;
+        public float MarginBottom { get; set; } = 2;
+        public float MarginLeft { get; set; } = 3;
+
+        public string MainFont { get; set; } = "Times New Roman";
+        public string CodeFont { get; set; } = "Cascadia Mono";
+
+        public float MainFontSize { get; set; } = 14;
+        public float CodeFontSize { get; set; } = 10;
+
+        public float MainIndent { get; set; }
+        public float CodeIndent { get; set; }
+
+        public float MainLineSpacingMultiplier { get; set; } = 1.5f;
+        public float CodeLineSpacingMultiplier { get; set; } = 1;
+
+        public bool IsIntervalBeforeTitle { get; set; } = true;
+        public bool IsIntervalAfterTitle { get; set; }
+
+        public bool IsCodeInTable { get; set; } = true;
+        public bool IsOpenAfterSave { get; set; } = true;
+    }
+
+    public class Config
+    {
+        public GeneratingConfig Generating { get; set; } = new();
+    }
+
     public static class AppSettings
     {
         private const string SettingsPath = "./settings.json";
@@ -27,6 +58,7 @@ namespace App.Domain.Models
 
         public static Session Session => _current.Session;
         public static ObservableDictionary<string, Patterns> Configurations => _current.Configurations;
+        public static Config Config => _current.Config;
 
         public static void Load()
         {
@@ -82,10 +114,19 @@ namespace App.Domain.Models
             }
         }
 
+        public static void UpdateConfig(Action<Config> updateAction)
+        {
+            lock (Lock)
+            {
+                updateAction(_current.Config);
+            }
+        }
+
         private class Settings
         {
             public Session Session { get; set; } = new();
             public ObservableDictionary<string, Patterns> Configurations { get; set; } = new();
+            public Config Config { get; set; } = new();
         }
     }
 }

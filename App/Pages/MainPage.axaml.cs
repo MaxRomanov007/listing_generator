@@ -143,6 +143,7 @@ public partial class MainPage : UserControl
         try
         {
             await WordGenerator.GenerateReport(_fields.RootPath, files, file.Path.LocalPath);
+            if (AppSettings.Config.Generating.IsOpenAfterSave) return;
             await Domain.Utils.Dialogs.ShowSuccessAsync("Листинг успешно записан");
         }
         catch (IOException)
@@ -229,5 +230,14 @@ public partial class MainPage : UserControl
             s.RootPath = _fields.RootPath;
             s.SelectedConfiguration = _fields.SelectedConfiguration;
         });
+    }
+
+    private async void OpenSettingsButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var dialog = new ConfigDialog();
+        var window = this.FindAncestorOfType<Window>();
+        if (window == null) return;
+
+        await dialog.ShowDialog<string>(window);
     }
 }
