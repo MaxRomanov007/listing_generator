@@ -3,11 +3,12 @@
         xmlns:models="clr-namespace:App.Domain.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="860" d:DesignHeight="390"
+        mc:Ignorable="d" d:DesignWidth="860" d:DesignHeight="450"
         x:Class="App.Dialogs.ConfigDialog"
         Title="Настройки"
         Width="860"
-        Height="390"
+        Height="450"
+        CanResize="False"
         x:DataType="models:GeneratingConfig"
         Icon="../Assets/Logo.ico"
         WindowStartupLocation="CenterOwner">
@@ -82,8 +83,6 @@
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        HorizontalAlignment="Stretch"
-                        Width="300"
                         Text="{Binding MainFont}" />
 
                     <Label
@@ -93,8 +92,6 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        HorizontalAlignment="Stretch"
-                        Width="300"
                         Text="{Binding CodeFont}" />
 
                 </Grid>
@@ -125,13 +122,6 @@
 
                 </Grid>
             </HeaderedContentControl>
-        </StackPanel>
-
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="10"
-            Spacing="10">
 
             <HeaderedContentControl Header="Отступы">
                 <Grid
@@ -158,6 +148,13 @@
 
                 </Grid>
             </HeaderedContentControl>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="10"
+            Spacing="10">
 
             <HeaderedContentControl Header="Междустрочный интервал">
                 <Grid
@@ -207,9 +204,9 @@
                 </Grid>
             </HeaderedContentControl>
 
-            <HeaderedContentControl Header="Дополнительные настройки">
+            <HeaderedContentControl Header="Дополнительные параметры">
                 <Grid
-                    RowDefinitions="Auto, Auto"
+                    RowDefinitions="Auto, Auto, Auto, Auto"
                     ColumnDefinitions="*, Auto">
 
                     <Label
@@ -229,6 +226,24 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         IsChecked="{Binding IsOpenAfterSave}" />
+
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Content="Втавлять структуру проекта" />
+                    <ToggleSwitch
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        IsChecked="{Binding IsTreeGenerating}" />
+
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Content="Прописывать относительный путь" />
+                    <ToggleSwitch
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        IsChecked="{Binding IsFilesWithPath}" />
 
                 </Grid>
             </HeaderedContentControl>

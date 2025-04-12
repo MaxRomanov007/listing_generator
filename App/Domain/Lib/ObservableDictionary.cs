@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
-namespace App.Domain.Utils;
+namespace App.Domain.Lib;
 
 [Serializable]
 public class ObservableKeyValuePair<TKey,TValue>:INotifyPropertyChanged

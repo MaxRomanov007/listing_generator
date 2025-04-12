@@ -1,8 +1,6 @@
 using App.Domain.Models;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 
 namespace App.Dialogs;
 
@@ -54,6 +52,8 @@ public partial class ConfigDialog : Window
 
             cfg.Generating.IsCodeInTable = _config.IsCodeInTable;
             cfg.Generating.IsOpenAfterSave = _config.IsOpenAfterSave;
+            cfg.Generating.IsTreeGenerating = _config.IsTreeGenerating;
+            cfg.Generating.IsFilesWithPath = _config.IsFilesWithPath;
         });
         Close();
     }

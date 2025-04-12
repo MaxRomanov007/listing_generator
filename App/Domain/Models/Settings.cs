@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using App.Domain.Lib;
 using App.Domain.Utils;
 
 namespace App.Domain.Models
@@ -43,6 +44,8 @@ namespace App.Domain.Models
 
         public bool IsCodeInTable { get; set; } = true;
         public bool IsOpenAfterSave { get; set; } = true;
+        public bool IsTreeGenerating { get; set; } = true;
+        public bool IsFilesWithPath { get; set; } = true;
     }
 
     public class Config
